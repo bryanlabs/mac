@@ -5,8 +5,8 @@
 You want to quickly interact with multiple AWS accounts without the complications of swapping access keys / environment variables... **mac** can help.
 
 **How is this different from awsclis --profile option.**  ````EG: aws <command> <options> --profile <profilename>````  
-* awsclis --profile is limited to passing 1 profile at a time.  
-* awsclis --profile is limited to only processing aws commands.  
+* awsclis --profile allows passing 1 profile at a time.  
+* awsclis --profile only processing aws commands.  
 * mac will loop through all the profiles you specify.  
 * mac will run any binary, awscli, or your own.  (EG: findPublicBuckets.exe)
 
