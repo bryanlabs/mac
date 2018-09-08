@@ -136,7 +136,10 @@ func getMatchedProfile(profilestr string) (profile string) {
 	// Find the profile.
 	for _, section := range cfg.Sections() {
 		if section.HasKey("role_arn") {
-			if section.Name() == profilestr {
+
+			slice := strings.Split(section.Name(), " ")
+			namedProfile := slice[1]
+			if namedProfile == profilestr {
 				words := section.Name()
 				slice := strings.Split(words, " ")
 				profile = slice[1]
