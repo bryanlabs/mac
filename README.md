@@ -4,8 +4,6 @@
 
 You want to quickly interact with one or many AWS accounts without the complications of swapping access keys or environment variables... **mac** can help.
 
-[![Watch Introduction](http://img.youtube.com/vi/6R44BADNJA8/0.jpg)](http://www.youtube.com/watch?v=6R44BADNJA8)
-
 ------------
 How is this different from awsclis --profile option
 ------------
