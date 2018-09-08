@@ -2,7 +2,7 @@
 **Multi Account Command** - runs any command in the context of the AWS Named Profile(s) specified.
 
 
-You want to quickly interact with one or many AWS accounts without the complications of swapping access keys or environment variables, and [aws-vault](https://github.com/99designs/aws-vault) in a for-loop sounds like a terrible idea. **mac** can help.
+You want to quickly interact with one or many AWS accounts without the complications of swapping access keys, environment variables, or [aws-vault](https://github.com/99designs/aws-vault) in a for-loop. **mac** can help.
 
 ------------
 How is this different from awscli's --profile option
