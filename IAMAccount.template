@@ -24,11 +24,11 @@
             "Properties": {
                 "GroupName": {
                     "Fn::Join": [
-                      "", [
+                      "-", [
                         {
                           "Ref": "Prefix"
                         },
-                        "-admins"
+                        "admins"
                       ]
                     ]
                   },
@@ -73,7 +73,8 @@
                   ]
                },
                "Users" : [ "Ref": "IAMUser" ]
-            }
+            },
+            "DependsOn" : "MacGroup"
          }
     }
 }

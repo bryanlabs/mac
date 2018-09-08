@@ -64,14 +64,14 @@ SETUP
 **Managed Accounts:** Deploy the ManagedAccount.template in all accounts that you wish to admin including any IAM accounts.  
 
 ````
-aws cloudformation create-stack --stack-name mac --template-body file://ManagedAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMAccount,ParameterValue=601953533983 ParameterKey=Prefix,ParameterValue=mac
+aws cloudformation create-stack --stack-name managed-mac-stack --template-body file://ManagedAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMAccount,ParameterValue=601953533983 ParameterKey=Prefix,ParameterValue=mac
 ````
 
 
 **IAM Account:** Deploy the IAMAccount.template in the Account where your IAM users are defined. Typically your central or security account.   
 
 ````
-aws cloudformation create-stack --stack-name mac --template-body file://IAMAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMUser,ParameterValue=DanBryan ParameterKey=ManagedAccount,ParameterValue=331668981413 ParameterKey=Prefix,ParameterValue=mac
+aws cloudformation create-stack --stack-name iam-mac-stack --template-body file://IAMAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMUser,ParameterValue=DanBryan ParameterKey=ManagedAccount,ParameterValue=331668981413 ParameterKey=Prefix,ParameterValue=mac
 ````
 
 <span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows assuming role into 1 Managed account. Others can be adding my manually modifying the inline policy, or submitting a merge request with the necessary changes.
