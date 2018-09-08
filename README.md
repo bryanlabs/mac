@@ -74,11 +74,22 @@ aws cloudformation create-stack --stack-name managed-mac-stack --template-body f
 aws cloudformation create-stack --stack-name iam-mac-stack --template-body file://IAMAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMUser,ParameterValue=DanBryan ParameterKey=ManagedAccount,ParameterValue=331668981413 ParameterKey=Prefix,ParameterValue=mac
 ````
 
-<span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows assuming role into 1 Managed account. Others can be adding my manually modifying the inline policy, or submitting a merge request with the necessary changes.
+<span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows adding one user, with permission to assume role into 1 account. Others can be adding my manually modifying the IAM Group / inline policy, or submitting a merge request with the necessary cloudformation changes.
 
 ------------
 Administrator environment setup
 ------------
+
+**Build or Download the App**
+
+**Build**
+````
+go get -u github.com/bryanlabs/mac
+````
+
+**Download**
+* Windows: https://github.com/bryanlabs/mac/blob/master/releases/mac.exe  
+* Linux: https://github.com/bryanlabs/mac/blob/master/releases/mac  
 
 Configure Credentials: (.aws/credentials)
 
