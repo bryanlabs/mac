@@ -1,17 +1,17 @@
 # mac
-**Multi Account Command** - runs any command in the context of the AWS Profile(s) specified.
+**Multi Account Command** - runs any command in the context of the AWS Named Profile(s) specified.
 
 
-You want to quickly interact with multiple AWS accounts without the complications of swapping access keys / environment variables... **mac** can help.
+You want to quickly interact with one or many AWS accounts without the complications of swapping access keys / environment variables... **mac** can help.
 
 **How is this different from awsclis --profile option.**  ````EG: aws <command> <options> --profile <profilename>````  
 * awsclis --profile allows passing 1 profile at a time.  
-* awsclis --profile only processing aws commands.  
+* awsclis --profile only processes aws commands.  
 * mac will loop through all the profiles you specify.  
 * mac will run any binary, awscli, or your own.  (EG: findPublicBuckets.exe)
 
 **How it works:**  
-Each account you manage has a mac-service role that can be assumed via sts. IAM users join the mac-admins group, and inherit permissions to assumerole as defined in the mac-assumerole policy. When a new admin comes on board, you create them an IAM user with access keys, then add them to the mac-admins group. When a new Managed account is created you run the cloud formation template to install the service role. Also, update the stack on the IAM Account with the new Managed Account number. The admin prefixes any normal command, with the profile(s) of interest. The command is executed in the context of each account, and the results are displayed via stdout.
+Each account you manage has a mac-service role that can be assumed via sts. IAM users join the mac-admins group, and inherit permissions to assumerole as defined in the mac-assumerole policy. When a new admin comes on board, you create them an IAM user with access keys, then add them to the mac-admins group. When a new Managed account is created you run the cloud formation template to install the service role. Also, update the stack on the IAM Account with the new Managed Account number. The admin prefixes any normal command, with the profile(s) of interest. The command will spawn parallel shells for each profile with the custom environment context, run the command,  and return the results.
 
 **Account Type Definitions:**  
 * **IAM Account:** This account is where all your IAM users exist. It's typicaly used in your central or security account.  
