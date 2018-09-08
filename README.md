@@ -13,7 +13,11 @@ You want to quickly interact with multiple AWS accounts without the complication
 **How it works:**  
 Each account you manage has a mac-service role that can be assumed via sts. IAM users join the mac-admins group, and inherit permissions to assumerole as defined in the mac-assumerole policy. When a new admin comes on board, you create them an IAM user with access keys, then add them to the mac-admins group. When a new Managed account is created you run the cloud formation template to install the service role. Also, update the stack on the IAM Account with the new Managed Account number. The admin prefixes any normal command, with the profile(s) of interest. The command is executed in the context of each account, and the results are displayed via stdout.
 
-**USAGE:** 
+**Account Type Definitions:**  
+* **IAM Account:** This account is where all your IAM users exist. It's typicaly used in your central or security account.  
+* **Managed Account:** This account is any account, including central/security that you want to be managed by the IAM Account users.  
+
+**EXAMPLES:** 
 
 **Example 1: See all buckets in multiple accounts.**
 
@@ -49,8 +53,8 @@ mac -p 'bryanlabs' './runme.sh'
 
 **SETUP:**
 
-**Cross Accounts:** Deploy the mac-service cloud formation template in all accounts that you wish to admin including any IAM accounts.  
-<span style="color:red">**NOTE:** </span> Update "SOURCEACCOUNT" to the account number for your Source Account.
+**Managed Accounts:** Deploy the mac-service cloud formation template in all accounts that you wish to admin including any IAM accounts.  
+<span style="color:red">**NOTE:** </span> Update "SOURCEACCOUNT" to the account number for your IAM Account.
 
 ````
 {
@@ -106,7 +110,7 @@ mac -p 'bryanlabs' './runme.sh'
 ````
 
 
-**Source Account:**  
+**IAM Account:**  
 
 Create an IAM group called "mac-admins"  
 Create an IAM Policy called "mac-assumerole"  
