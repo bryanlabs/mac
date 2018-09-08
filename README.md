@@ -4,6 +4,8 @@
 
 You want to quickly interact with one or many AWS accounts without the complications of swapping access keys or environment variables... **mac** can help.
 
+[![Watch Introduction](http://img.youtube.com/vi/6R44BADNJA8/0.jpg)](http://www.youtube.com/watch?v=6R44BADNJA8)
+
 ------------
 How is this different from awsclis --profile option
 ------------
@@ -60,6 +62,7 @@ mac -p 'bryanlabs' './getEC2InstanceIDs.sh'
 ------------
 SETUP
 ------------
+<span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows adding one user, with permission to assume role into 1 account. Others can be adding by manually modifying the IAM Group / inline policy, or submitting a [Merge-Request](https://github.com/bryanlabs/mac/issues/1 "Merge-Request") with the necessary cloudformation changes.
 
 **Managed Accounts:** Deploy the ManagedAccount.template in all accounts that you wish to admin including any IAM accounts.  
 
@@ -73,8 +76,6 @@ aws cloudformation create-stack --stack-name managed-mac-stack --template-body f
 ````
 aws cloudformation create-stack --stack-name iam-mac-stack --template-body file://IAMAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMUser,ParameterValue=DanBryan ParameterKey=ManagedAccount,ParameterValue=331668981413 ParameterKey=Prefix,ParameterValue=mac
 ````
-
-<span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows adding one user, with permission to assume role into 1 account. Others can be adding my manually modifying the IAM Group / inline policy, or submitting a merge request with the necessary cloudformation changes.
 
 ------------
 Administrator environment setup
