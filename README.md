@@ -4,20 +4,29 @@
 
 You want to quickly interact with one or many AWS accounts without the complications of swapping access keys / environment variables... **mac** can help.
 
-**How is this different from awsclis --profile option.**  ````EG: aws <command> <options> --profile <profilename>````  
+------------
+How is this different from awsclis --profile option
+------------
 * awsclis --profile allows passing 1 profile at a time.  
 * awsclis --profile only processes aws commands.  
 * mac will loop through all the profiles you specify.  
 * mac will run any binary, awscli, or your own.  (EG: findPublicBuckets.exe)
 
-**How it works:**  
+------------
+How it works
+------------
 Each account you manage has a mac-service role that can be assumed via sts. IAM users join the mac-admins group, and inherit permissions to assumerole as defined in the mac-assumerole policy. When a new admin comes on board, you create them an IAM user with access keys, then add them to the mac-admins group. When a new Managed account is created you run the cloud formation template to install the service role. Also, update the stack on the IAM Account with the new Managed Account number. The admin prefixes any normal command, with the profile(s) of interest. The command will spawn parallel shells for each profile with the custom environment context, run the command,  and return the results.
 
-**Account Type Definitions:**  
+------------
+Account Type Definitions
+------------
+The following Account types will be mentioned, here are the definitions.
 * **IAM Account:** This account is where all your IAM users exist. It's typicaly used in your central or security account.  
 * **Managed Account:** This account is any account, including central/security that you want to be managed by the IAM Account users.  
 
-**EXAMPLES:** 
+------------
+EXAMPLES 
+------------
 
 **Example 1: See all buckets in multiple accounts.**
 
@@ -51,27 +60,28 @@ mac -p 'bryanlabs' './runme.sh'
 ````
 
 
-**SETUP:**
+------------
+SETUP
+------------
 
 **Managed Accounts:** Deploy the ManagedAccount.template in all accounts that you wish to admin including any IAM accounts.  
 
 ````
-aws cloudformation ...
+aws cloudformation create-stack --stack-name mac --template-body file://ManagedAccount.template --parameters ParameterKey=KeyPairName,ParameterValue=TestKey ParameterKey=SubnetIDs,ParameterValue=SubnetID1\\,SubnetID2
 ````
 
 
-**IAM Account:** Deploy the IAMAccount.template in the Account where your IAM users are defined. Typically your central or security account.  
-
-
-<span style="color:red">**NOTE:** </span> My knowledge of cloudformation only allows assuming role into 1 Managed account. Others can be adding my manually modifying the inline policy, or submitting a merge request with the necessary changes.
-  
+**IAM Account:** Deploy the IAMAccount.template in the Account where your IAM users are defined. Typically your central or security account.   
 
 ````
-aws cloudformation...
+aws cloudformation create-stack --stack-name mac --template-body file://IAMAccount.template --parameters ParameterKey=KeyPairName,ParameterValue=TestKey ParameterKey=SubnetIDs,ParameterValue=SubnetID1\\,SubnetID2
 ````
 
+<span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows assuming role into 1 Managed account. Others can be adding my manually modifying the inline policy, or submitting a merge request with the necessary changes.
 
-**Administrator environment setup:**
+------------
+Administrator environment setup
+------------
 
 Configure Credentials: (.aws/credentials)
 
