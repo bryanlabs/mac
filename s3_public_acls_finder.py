@@ -1,3 +1,5 @@
+# Modified from https://github.com/mz1991/S3-public-ACLs-finder/blob/master/s3_public_acls_finder.py
+ 
 import boto3 
 import requests
 import json
