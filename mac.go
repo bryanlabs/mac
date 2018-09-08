@@ -30,7 +30,7 @@ var (
 
 func main() {
 	// Application version.
-	kingpin.Version("2018.09.07")
+	kingpin.Version("2018.09.08")
 
 	// Validate the commandline arguments and flags.
 	kingpin.Parse()
