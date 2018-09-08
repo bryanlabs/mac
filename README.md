@@ -53,91 +53,22 @@ mac -p 'bryanlabs' './runme.sh'
 
 **SETUP:**
 
-**Managed Accounts:** Deploy the mac-service cloud formation template in all accounts that you wish to admin including any IAM accounts.  
-<span style="color:red">**NOTE:** </span> Update "SOURCEACCOUNT" to the account number for your IAM Account.
+**Managed Accounts:** Deploy the ManagedAccount.template in all accounts that you wish to admin including any IAM accounts.  
 
 ````
-{
-    "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "Creates an IAM role with cross-account access for mac.",
-    "Metadata": {
-        "VersionDate": {
-            "Value": "20170717"
-        },
-        "Identifier": {
-            "Value": "mac-service"
-        }
-    },
-    "Resources": {
-        "CrossAccountRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "RoleName": "mac-service",
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Principal": {
-                                "AWS": [
-                                    "arn:aws:iam::SOURCEACCOUNT:root"
-                                ]
-                            },
-                            "Action": "sts:AssumeRole"
-                        }
-                    ]
-                },
-                "Path": "/",
-                "Policies": [
-                    {
-                        "PolicyName": "AdministratorAccess",
-                        "PolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [
-                                {
-                                    "Effect": "Allow",
-                                    "Action": "*",
-                                    "Resource": "*"
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    }
-}
+aws cloudformation ...
 ````
 
 
-**IAM Account:**  
+**IAM Account:** Deploy the IAMAccount.template in the Account where your IAM users are defined. Typically your central or security account.  
 
-Create an IAM group called "mac-admins"  
-Create an IAM Policy called "mac-assumerole"  
-<span style="color:red">**NOTE:** </span> each account you admin should be added to this list.
+
+<span style="color:red">**NOTE:** </span> My knowledge of cloudformation only allows assuming role into 1 Managed account. Others can be adding my manually modifying the inline policy, or submitting a merge request with the necessary changes.
   
 
 ````
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "VisualEditor0",
-      "Effect": "Allow",
-      "Action": "sts:AssumeRole",
-      "Resource": [
-        "arn:aws:iam::111111111111:role/mac-service",
-        "arn:aws:iam::222222222222:role/mac-service"
-      ]
-    }
-  ]
-}
+aws cloudformation...
 ````
-
-create role mac-service  
-attach policy_mac-accounts to IAM group mac-admins  
-attach policy Administrator to mac-service  
-add IAM users to mac-admins  
 
 
 **Administrator environment setup:**

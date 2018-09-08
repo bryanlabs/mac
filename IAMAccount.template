@@ -1,0 +1,79 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Provisions the IAM Account with the groups, policies, and roles needed.",
+    "Parameters" : {
+        "IAMUser" : {
+          "Type" : "String",
+          "Default" : "IAMUser",
+          "Description" : "Add one IAM user to admin group."
+        },
+        "ManagedAccount" : {
+            "Type" : "String",
+            "Default" : "111111111111",
+            "Description" : "Define One Managed Account number."
+          },
+        "Prefix" : {
+            "Type" : "String",
+            "Default" : "mac",
+            "Description" : "Enter the prefix for the service role."
+          }
+    },
+    "Resources": {
+        "MacGroup": {
+            "Type": "AWS::IAM::Group",
+            "Properties": {
+                "GroupName": {
+                    "Fn::Join": [
+                      "", [
+                        {
+                          "Ref": "Prefix"
+                        },
+                        "-admins"
+                      ]
+                    ]
+                  },
+                "Path": "/",
+                "Policies" : [ {
+                    "PolicyName": {
+                        "Fn::Join": [
+                          "-", [
+                            {
+                              "Ref": "Prefix"
+                            },
+                            "assumerole"
+                          ]
+                        ]
+                      },
+                    "PolicyDocument" : {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                          {
+                            "Sid": "VisualEditor0",
+                            "Effect": "Allow",
+                            "Action": "sts:AssumeRole",
+                            "Resource": [
+                                "Fn::Join" : [ ":", [ "arn", "aws", "iam","", "Ref": "ManagedAccount","Fn::Join" : [ "/", [ "role", "Fn::Join" : [ "-", [ "Ref": "Prefix","service"] ]] ]] ]
+                            ]
+                          }
+                        ] }
+                 } ]
+            }
+        },
+        "addUserToGroup" : {
+            "Type" : "AWS::IAM::UserToGroupAddition",
+            "Properties" : {
+               "GroupName" : {
+                "Fn::Join": [
+                    "", [
+                      {
+                        "Ref": "Prefix"
+                      },
+                      "-admins"
+                    ]
+                  ]
+               },
+               "Users" : [ "Ref": "IAMUser" ]
+            }
+         }
+    }
+}

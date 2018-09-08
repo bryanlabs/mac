@@ -1,0 +1,63 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Creates an IAM role with cross-account access for mac.",
+    "Parameters" : {
+        "IAMAccount" : {
+          "Type" : "String",
+          "Default" : "CHANGEME",
+          "Description" : "Enter the Account number where your IAM users are defined."
+        },
+        "Prefix" : {
+            "Type" : "String",
+            "Default" : "mac",
+            "Description" : "Enter the prefix for the service role."
+          }
+    },
+    "Resources": {
+        "CrossAccountRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": {
+                    "Fn::Join": [
+                      "-", [
+                        {
+                          "Ref": "Prefix"
+                        },
+                        "service"
+                      ]
+                    ]
+                  },
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": [
+                                    "Fn::Join" : [ ":", [ "arn", "aws", "iam","", "Ref": "IAMAccount","root"] ]
+                                ]
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "AdministratorAccess",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": "*",
+                                    "Resource": "*"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
