@@ -31,32 +31,29 @@ EXAMPLES
 **Example 1: See all buckets in multiple accounts.**
 
 ````
-mac -p 'bryanlabs,bryanlabsdev' 'aws s3 ls'
+$ mac -p 'bryanlabs,bryanlabsdev' 'aws s3 ls'
 Profile: bryanlabsdev
 2018-08-15 21:36:32 cf-templates-aviic4ggd7jk-us-east-1
 Profile: bryanlabs
 2017-12-16 17:34:50 bryanlabs
 ````
-**Example 2: See the bucket policy from a specific account.**
+**Example 2: Find Public Buckets.**
 ````
-# 
-mac -p 'bryanlabs' 'aws s3api get-bucket-policy --bucket bryanlabs'
-{
-    "Policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"AWSCloudTrailAclCheck20150319\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Action\":\"s3:GetBucketAcl\",\"Resource\":\"arn:aws:s3:::bryanlabs\"},{\"Sid\":\"AWSCloudTrailWrite20150319\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Action\":\"s3:PutObject\",\"Resource\":\"arn:aws:s3:::bryanlabs/CloudTrail/AWSLogs/111111111111/*\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}}}]}"
-}
+$ mac -p 'bryanlabs' 'python.exe .\s3_public_acls_finder.py'
+Profile: bryanlabs
+('The following permission: *Read - Public Access: List Objects* has been granted on the bucket *bryanlabs-public*', True)
 ````
 
-<span style="color:red">**NOTE:** </span> redirection and pipes don't work yet, for now wrap in a script.
-
-**Example 3: Wrap complicated commands in scripts.**
+**Example 3: Run Script to find all InstanceIDs.**
+<span style="color:red">NOTE: </span> redirection and pipes don't work yet, so sometimes a script is needed.
 
 ````
 Example:
-cat <<EOF > runme.sh
+$ cat <<EOF > getEC2InstanceIDs.sh
 #!/bin/bash
 aws ec2 describe-instances | jq -r .[][].Instances[] | jq -r .InstanceId
 EOF
-mac -p 'bryanlabs' './runme.sh'
+mac -p 'bryanlabs' './getEC2InstanceIDs.sh'
 ````
 
 
@@ -67,14 +64,14 @@ SETUP
 **Managed Accounts:** Deploy the ManagedAccount.template in all accounts that you wish to admin including any IAM accounts.  
 
 ````
-aws cloudformation create-stack --stack-name mac --template-body file://ManagedAccount.template --parameters ParameterKey=KeyPairName,ParameterValue=TestKey ParameterKey=SubnetIDs,ParameterValue=SubnetID1\\,SubnetID2
+aws cloudformation create-stack --stack-name mac --template-body file://ManagedAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMAccount,ParameterValue=601953533983 ParameterKey=Prefix,ParameterValue=mac
 ````
 
 
 **IAM Account:** Deploy the IAMAccount.template in the Account where your IAM users are defined. Typically your central or security account.   
 
 ````
-aws cloudformation create-stack --stack-name mac --template-body file://IAMAccount.template --parameters ParameterKey=KeyPairName,ParameterValue=TestKey ParameterKey=SubnetIDs,ParameterValue=SubnetID1\\,SubnetID2
+aws cloudformation create-stack --stack-name mac --template-body file://IAMAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMUser,ParameterValue=DanBryan ParameterKey=ManagedAccount,ParameterValue=331668981413 ParameterKey=Prefix,ParameterValue=mac
 ````
 
 <span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows assuming role into 1 Managed account. Others can be adding my manually modifying the inline policy, or submitting a merge request with the necessary changes.
@@ -96,36 +93,31 @@ Configure Named Profiles (.aws/config)
 [default]
 region=us-east-1
 
-[profile centralservices]
+[profile bryanlabs]
 region=us-east-1
-role_arn=arn:aws:iam::111111111111:role/mac-service
+role_arn=arn:aws:iam::601953533983:role/mac-service
 source_profile=default
 
-[profile security]
+[profile bryanlabsdev]
 region=us-east-1
-role_arn=arn:aws:iam::222222222222:role/mac-service
-source_profile=default
-
-[profile logging]
-region=us-east-1
-role_arn=arn:aws:iam::333333333333:role/mac-service
+role_arn=arn:aws:iam::331668981413:role/mac-service
 source_profile=default
 ````
 Test:
 ````
-mac -a 'centralservices,security' 'aws sts get-caller-identity'
+mac -a 'bryanlabs,bryanlabsdev' 'aws sts get-caller-identity'
 
-dan@devbox:mac$ ./mac -a 'centralservices,security' 'aws sts get-caller-identity'
-Profile: centralservices
+dan@devbox:mac$ ./mac -a 'bryanlabs,bryanlabsdev' 'aws sts get-caller-identity'
+Profile: bryanlabs
 {
-    "Account": "centralservices",
+    "Account": "bryanlabs",
     "UserId": "AROAJP7QAQIUQT6XY72VG:botocore-session-1534452856",
-    "Arn": "arn:aws:sts::111111111111:assumed-role/mac-service/botocore-session-1534452856"
+    "Arn": "arn:aws:sts::601953533983:assumed-role/mac-service/botocore-session-1534452856"
 }
-Profile: security
+Profile: bryanlabsdev
 {
     "UserId": "AROAIWNRU4MMXGREHEURS:botocore-session-1534452839",
-    "Arn": "arn:aws:sts::222222222222:assumed-role/mac-service/botocore-session-1534452839",
-    "Account": "security"
+    "Arn": "arn:aws:sts::331668981413:assumed-role/mac-service/botocore-session-1534452839",
+    "Account": "bryanlabsdev"
 }
 ````
