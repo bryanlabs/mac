@@ -9,8 +9,8 @@ How is this different from awsclis --profile option
 ------------
 * awsclis --profile allows passing 1 profile at a time.  
 * awsclis --profile only processes aws commands.  
-* mac will loop through all the profiles you specify.  
-* mac will run any binary, awscli, or your own.  (EG: findPublicBuckets.exe)
+* mac will loop through all the profiles you specify. EG:  ````mac -p 'prod,dev' 'aws s3 ls'````
+* mac will run any binary; aws, script. EG: ````mac -p 'prod,dev' 'python.exe .\s3_public_acls_finder.py'````
 
 ------------
 How it works
