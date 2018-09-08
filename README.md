@@ -2,20 +2,20 @@
 **Multi Account Command** - runs any command in the context of the AWS Named Profile(s) specified.
 
 
-You want to quickly interact with one or many AWS accounts without the complications of swapping access keys or environment variables... **mac** can help.
+You want to quickly interact with one or many AWS accounts without the complications of swapping access keys or environment variables, and [aws-vault](https://github.com/99designs/aws-vault) in a for-loop sounds like a terrible idea. **mac** can help.
 
 ------------
-How is this different from awsclis --profile option
+How is this different from awscli's --profile option
 ------------
-* awsclis --profile allows passing 1 profile at a time.  
-* awsclis --profile only processes aws commands.  
-* mac will loop through all the profiles you specify. EG:  ````mac -p 'prod,dev' 'aws s3 ls'````
-* mac will run any binary; aws, script. EG: ````mac -p 'prod,dev' 'python.exe .\s3_public_acls_finder.py'````
+* awscli's --profile allows passing a single profile at a time.  
+* awscli's --profile only processes aws commands.  
+* mac will loop through all the profiles you specify. e.g.:  ````mac -p 'prod,dev' 'aws s3 ls'````
+* mac will run any binary; aws, script. e.g.: ````mac -p 'prod,dev' 'python.exe .\s3_public_acls_finder.py'````
 
 ------------
 How it works
 ------------
-Each account you manage has a mac-service role that can be assumed via sts. IAM users join the mac-admins group, and inherit permissions to assumerole as defined in the mac-assumerole policy. When a new admin comes on board, you create them an IAM user with access keys, then add them to the mac-admins group. When a new Managed account is created you run the cloud formation template to install the service role. Also, update the stack on the IAM Account with the new Managed Account number. The admin prefixes any normal command, with the profile(s) of interest. The command will spawn parallel shells for each profile with the custom environment context, run the command,  and return the results.
+Each account you manage has a mac-service role that can be assumed via sts. IAM users join the mac-admins group, and inherit permissions to assume roles as defined in the mac-assumerole policy. When a new admin comes on board, you create them an IAM user with access keys, then add them to the mac-admins group. When a new managed account is created, you run the cloud formation template to install the service role. Also, update the stack on the IAM Account with the new Managed Account number. The admin prefixes any normal command, with the profile(s) of interest. The command will spawn parallel shells for each profile with the custom environment context, run the command,  and return the results.
 
 ------------
 Account Type Definitions
