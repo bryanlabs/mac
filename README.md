@@ -60,9 +60,9 @@ mac -p 'bryanlabs' './getEC2InstanceIDs.sh'
 ------------
 SETUP
 ------------
-<span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows adding one user, with permission to assume role into 1 account. Others can be adding by manually modifying the IAM Group / inline policy, or submitting a [Merge-Request](https://github.com/bryanlabs/mac/issues/1 "Merge-Request") with the necessary cloudformation changes.
+<span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows adding one user, with permission to assume role into one account. Others can be adding by manually modifying the resources, or submitting a [Merge-Request](https://github.com/bryanlabs/mac/issues/1 "Merge-Request") with the necessary cloudformation changes.
 
-**Managed Accounts:** Deploy the ManagedAccount.template in all accounts that you wish to admin including any IAM accounts.  
+**Managed Accounts:** Deploy the ManagedAccount.template in any accounts that you wish to admin including the IAM Account.  
 
 ````
 aws cloudformation create-stack --stack-name managed-mac-stack --template-body file://ManagedAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMAccount,ParameterValue=601953533983 ParameterKey=Prefix,ParameterValue=mac
