@@ -72,14 +72,14 @@ SETUP
 ------------
 <span style="color:red">**NOTE**: </span> My knowledge of cloudformation only allows adding one user, with permission to assume role into one account. Others can be adding by manually modifying the resources, or submitting a [Merge-Request](https://github.com/bryanlabs/mac/issues/1 "Merge-Request") with the necessary cloudformation changes.
 
-**Managed Accounts:** Deploy the ManagedAccount.template in any accounts that you wish to admin including the IAM Account.  
+**Managed Accounts:** Deploy the ManagedAccount.template in any accounts that you wish to admin including the IAM Account.  Be sure to update the IAMAccount ParameterValue to your IAMAccount number.
 
 ````
 aws cloudformation create-stack --stack-name managed-mac-stack --template-body file://ManagedAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMAccount,ParameterValue=601953533983 ParameterKey=Prefix,ParameterValue=mac
 ````
 
 
-**IAM Account:** Deploy the IAMAccount.template in the Account where your IAM users are defined. Typically your central or security account.   
+**IAM Account:** Deploy the IAMAccount.template in the Account where your IAM users are defined. Typically your central or security account. Be sure to update the ManagedAccount ParameterValue to your ManagedAccount number.
 
 ````
 aws cloudformation create-stack --stack-name iam-mac-stack --template-body file://IAMAccount.template --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=IAMUser,ParameterValue=DanBryan ParameterKey=ManagedAccount,ParameterValue=331668981413 ParameterKey=Prefix,ParameterValue=mac
