@@ -37,14 +37,25 @@ Profile: bryanlabsdev
 Profile: bryanlabs
 2017-12-16 17:34:50 bryanlabs
 ````
-**Example 2: Find Public Buckets.**
+**Example 2: Wildcards.**
+
+````
+Example:
+$ mac -p 'bryan*' 'aws s3 ls'
+Profile: bryanlabsdev
+2018-08-15 21:36:32 cf-templates-aviic4ggd7jk-us-east-1
+Profile: bryanlabs
+2017-12-16 17:34:50 bryanlabs
+````
+
+**Example 3: Find Public Buckets.**
 ````
 $ mac -p 'bryanlabs' 'python.exe .\s3_public_acls_finder.py'
 Profile: bryanlabs
 ('The following permission: *Read - Public Access: List Objects* has been granted on the bucket *bryanlabs-public*', True)
 ````
 
-**Example 3: Run Script to find all InstanceIDs.**
+**Example 4: Run Script to find all InstanceIDs.**  
 <span style="color:red">NOTE: </span> redirection and pipes don't work yet, so sometimes a script is needed.
 
 ````
@@ -55,7 +66,6 @@ aws ec2 describe-instances | jq -r .[][].Instances[] | jq -r .InstanceId
 EOF
 mac -p 'bryanlabs' './getEC2InstanceIDs.sh'
 ````
-
 
 ------------
 SETUP
