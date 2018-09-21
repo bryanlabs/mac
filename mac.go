@@ -31,7 +31,7 @@ var (
 
 func main() {
 	// Application version.
-	kingpin.Version("2018.09.09")
+	kingpin.Version("2018.09.17")
 
 	// Validate the commandline arguments and flags.
 	kingpin.Parse()
@@ -87,7 +87,7 @@ func macRun(profile string, cmdName string, cmdArgs []string) {
 	// Handle errors.
 	if err != nil {
 		fmt.Printf("Profile: %v, Error Creating Cmd: %v\n", profile, err)
-		os.Exit(1)
+		// os.Exit(1)
 	}
 
 	// scanner will display the cmd Stdoutput
@@ -109,14 +109,14 @@ func macRun(profile string, cmdName string, cmdArgs []string) {
 	err = cmd.Start()
 	if err != nil {
 		fmt.Printf("Profile: %v, Error Starting Cmd: %v\n", profile, err)
-		os.Exit(1)
+		// os.Exit(1)
 	}
 
 	// Handle errors.
 	err = cmd.Wait()
 	if err != nil {
 		fmt.Printf("Profile: %v, Error waiting for Cmd: %v\n", profile, err)
-		os.Exit(1)
+		// os.Exit(1)
 	}
 
 }
