@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -31,7 +32,7 @@ var (
 
 func main() {
 	// Application version.
-	kingpin.Version("2018.09.17")
+	kingpin.Version("2018.10.19")
 
 	// Validate the commandline arguments and flags.
 	kingpin.Parse()
@@ -82,6 +83,9 @@ func macRun(profile string, cmdName string, cmdArgs []string) {
 	// Setup the command details, binary, flags, environment variables...
 	cmd := exec.Command(cmdName, cmdArgs...)
 	cmd.Env = append(os.Environ(), "AWS_PROFILE="+profile, "AWS_SDK_LOAD_CONFIG=1")
+	var errbuf bytes.Buffer
+	// cmd.Stdout = &outbuf
+	cmd.Stderr = &errbuf
 	cmdReader, err := cmd.StdoutPipe()
 
 	// Handle errors.
@@ -115,7 +119,9 @@ func macRun(profile string, cmdName string, cmdArgs []string) {
 	// Handle errors.
 	err = cmd.Wait()
 	if err != nil {
-		fmt.Printf("Profile: %v, Error waiting for Cmd: %v\n", profile, err)
+		// stdout := outbuf.String()
+		stderr := errbuf.String()
+		fmt.Printf("Profile: %v, Error waiting for Cmd. %v\n", profile, stderr)
 		// os.Exit(1)
 	}
 
